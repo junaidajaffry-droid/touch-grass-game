@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Touch Grass: The Brainrot Gauntlet</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-wrapper">
+    <!-- Retro CRT & Scanline Overlay -->
+    <div class="crt-overlay"></div>
+
+    <!-- Canvas -->
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Top HUD -->
+    <div id="hud">
+      <!-- Aura Panel -->
+      <div class="hud-panel aura-box">
+        <div style="display: flex; flex-direction: column;">
+          <span style="font-size: 10px; color: #aaa; text-transform: uppercase;">Aura Meter</span>
+          <span id="aura-val">1000</span>
+        </div>
+        <div style="border-left: 1px solid rgba(255,255,255,0.2); padding-left: 10px;">
+          <span id="aura-rank">MID 😐</span>
+        </div>
+      </div>
+
+      <!-- Stage / Grass Progress -->
+      <div class="hud-panel progress-container">
+        <div class="progress-label">
+          <span>BEDROOM</span>
+          <span>THE GRASS 🌱</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div id="progress-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sound Toggle -->
+    <button id="sound-toggle" title="Toggle Sound">🔊 Sound ON</button>
+
+    <!-- Dynamic Meme Tip Ticker -->
+    <div id="meme-ticker">🔥 Tip: Press [E] or [Click] to SLAP away toxic memes!</div>
+
+    <!-- Desktop Controls Legend -->
+    <div id="controls-hint">
+      <span class="key">A</span> / <span class="key">D</span> Move &bull; 
+      <span class="key">W</span> / <span class="key">Space</span> Jump &bull; 
+      <span class="key">E</span> or <span class="key">Click</span> <b>SLAP</b>
+    </div>
+
+    <!-- On-screen Mobile Controls -->
+    <div id="mobile-controls">
+      <div style="display: flex; gap: 12px;">
+        <button id="btn-left" class="touch-btn">◀</button>
+        <button id="btn-right" class="touch-btn">▶</button>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: flex-end;">
+        <button id="btn-jump" class="touch-btn">⬆</button>
+        <button id="btn-slap" class="touch-btn slap-touch-btn">SLAP 👋</button>
+      </div>
+    </div>
+
+    <!-- START MENU SCREEN -->
+    <div id="screen-menu" class="modal-screen">
+      <h1 class="title-glow">TOUCH GRASS</h1>
+      <p style="color: var(--cyber-cyan); font-weight: 700; letter-spacing: 2px; margin-bottom: 8px;">
+        THE BRAINROT GAUNTLET
+      </p>
+      <p class="subtitle">
+        You've been doomscrolling for 16 hours straight. Escape the dungeon, slap away toxic memes, dodge giant red flags, and make it outside to touch real grass!
+      </p>
+      <button id="btn-start" class="btn-primary">START RUN 🏃💨</button>
+      <div style="margin-top: 24px; font-size: 12px; color: #777;">
+        Featuring: Ragdoll physics &bull; Slap mechanics &bull; Pure offline Web Audio
+      </div>
+    </div>
+
+    <!-- GAME OVER SCREEN (COOKED) -->
+    <div id="screen-gameover" class="modal-screen hidden">
+      <h1 class="title-glow" style="filter: drop-shadow(0 0 25px rgba(255, 42, 133, 0.8));">
+        YOU ARE COOKED 💀
+      </h1>
+      <p class="subtitle" style="color: #ff85a1;">
+        The algorithm consumed your soul. Your Aura dropped to zero and you never saw sunlight.
+      </p>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div id="stat-over-slaps" class="stat-val">0</div>
+          <div class="stat-label">Memes Slapped</div>
+        </div>
+        <div class="stat-item">
+          <div id="stat-over-time" class="stat-val">0s</div>
+          <div class="stat-label">Time Survived</div>
+        </div>
+      </div>
+      <button id="btn-restart" class="btn-primary" style="background: linear-gradient(135deg, var(--hot-pink), #ff0055); box-shadow: 0 0 20px rgba(255, 42, 133, 0.6);">
+        LOCK IN &amp; RETRY 🔄
+      </button>
+    </div>
+
+    <!-- VICTORY SCREEN (TOUCHED GRASS) -->
+    <div id="screen-win" class="modal-screen hidden">
+      <h1 class="title-glow" style="filter: drop-shadow(0 0 35px rgba(0, 255, 136, 0.9));">
+        YOU TOUCHED GRASS! 🌱
+      </h1>
+      <p class="subtitle" style="color: #00ff88; font-weight: 600;">
+        ENLIGHTENMENT ACHIEVED. You broke free of the brainrot loop and stepped into the real world.
+      </p>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div id="stat-win-aura" class="stat-val" style="color: var(--gold);">0</div>
+          <div class="stat-label">Final Aura</div>
+        </div>
+        <div class="stat-item">
+          <div id="stat-win-slaps" class="stat-val">0</div>
+          <div class="stat-label">Memes Slapped</div>
+        </div>
+        <div class="stat-item">
+          <div id="stat-win-time" class="stat-val">0s</div>
+          <div class="stat-label">Clear Time</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val" style="color: var(--neon-green); font-size: 18px; line-height: 24px;">SIGMA 🗿</div>
+          <div class="stat-label">Title Earned</div>
+        </div>
+      </div>
+      <button id="btn-win-restart" class="btn-primary">
+        PLAY AGAIN 🌱✨
+      </button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="audio.js"></script>
+  <script src="physics.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
